@@ -55,10 +55,10 @@ async function getLatestArticle() {
     const response = await axios.get(NEWS_URL);
     const $ = cheerio.load(response.data);
 
-    // Aktuellsten News-Titel auslesen (erstes h2 oder h3 im main-Tag)
+    // get newest titel
     const latestTitle = $("main h2, main h3").first().text().trim();
 
-    // Optional: Link zur konkreten News, falls vorhanden
+    // Optional: link to news
     const latestLink = $("main h2 a, main h3 a").first().attr("href") || NEWS_URL;
 
     return { title: latestTitle, link: latestLink };
@@ -140,7 +140,7 @@ async function checkNews(manual = false, interaction = null) {
 
     const last = loadLastArticle();
 
-    // Oly post when news is new
+    // Only post when news is new
     
     if (!last || latest.title !== last.title) {
       const channel = await client.channels.fetch(CHANNEL_ID_NEWS);
@@ -220,13 +220,13 @@ client.once("clientReady", () => {
   // Initialer Check
   checkNews();
 
-  // Automatischer Intervall-Check News
+  // automatic intervall check news
   setInterval(() => checkNews(false), CHECK_INTERVAL_MINUTES_News * 60 * 1000);
 
   // Initialer Check
   checkPatch();
 
-    // Automatischer Intervall-Check Patch
+    // automatic intervall check patch
   setInterval(() => checkPatch(false), CHECK_INTERVAL_MINUTES_Patch * 60 * 1000);
 
 });
